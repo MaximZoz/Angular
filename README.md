@@ -4,4 +4,4 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Изменения
 
-1.  добавляем динамику в директиву (StyleDirective) Создаём Декоратор (@HostListener), реализовываем задачу при наведении на (p) меняем его цвет
+1.  реализовываем задачу при наведении на (p) меняем его цвет, создаём рамку и меняем цвет с помощью @HostListener
