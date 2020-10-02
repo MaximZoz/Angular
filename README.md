@@ -4,4 +4,4 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Изменения
 
-1.  оживляем директиву, добавляя в класс директивы (StyleDirective) конструктор, в который добавляем инъекцию с доступом до элемента (src\app\directives)
+1.  добавляем динамику в директиву (StyleDirective) Создаём Декоратор (@HostListener), реализовываем задачу при наведении на (p) меняем его цвет
