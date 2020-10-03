@@ -11,4 +11,15 @@
   <p appStyle='blue' fontWeight='normal' [dStyles]='{border: " 1px solid red", borderRadius:"10px"}'>Lorem ipsum dolor
     sit
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed, explicabo.</p>
+  <button class="btn" (click)="isVisible=!isVisible">Toggle</button>
+  <!-- <div class="wrap">
+    <p *ngIf="isVisible">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae, magni reprehenderit.
+      Tempore, quidem
+      minima. Blanditiis dolor error sed ad nobis?</p>
+  </div> -->
+  <div class="wrap" *appIfNot="!isVisible">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae, magni reprehenderit.
+      Tempore, quidem
+      minima. Blanditiis dolor error sed ad nobis?</p>
+  </div>
 </div>
