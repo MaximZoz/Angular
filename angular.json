@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "Zoz"
+    }
+  },
+  "defaultProject": "Zoz",
+  "cli": {
+    "analytics": false
+  }
 }
