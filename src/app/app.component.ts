@@ -26,4 +26,10 @@ export class AppComponent {
       text: 'хороший язык программирования',
     },
   ];
+  addPost() {
+    this.posts.unshift({
+      title: 'Angular 10',
+      text: 'я изучаю этот фреймворк прямо сейчас',
+    });
+  }
 }
