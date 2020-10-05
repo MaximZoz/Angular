@@ -18,4 +18,10 @@
   <p>
     {{ str | titlecase | slice: 1:5 }}
   </p>
+  <p>
+    {{ date | date: "dd.M.yy " }}
+  </p>
+  <p>
+    {{ date | date: " HHч: mmмин: sс" }}
+  </p>
 </div>

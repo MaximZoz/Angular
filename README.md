@@ -2,13 +2,9 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## Работа со строками
+## Работа с датами
 
-str
+date: Date = new Date();
 
-| uppercase - верхний регистр
-| lowercase - нижний регистр
-| titlecase - каждое слово с большой буквы
-| slice: 1 - выризается первый символ
-| slice: 1:5 - выризается с первого по пятый символ
-| slice: 1:-2 - выризается с первый и два с конца символов
+date | date: "dd.M.yy " / 05.10.20
+date | date: " HHч: mmмин: sс" / 13ч: 36мин: 36с
