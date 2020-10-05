@@ -1,21 +1,18 @@
-import {BrowserModule} from '@angular/platform-browser'
-import {NgModule} from '@angular/core'
+import { BrowserModule } from '@angular/platform-browser';
+import { LOCALE_ID, NgModule } from '@angular/core';
 
-import {AppComponent} from './app.component'
-import {FormsModule} from '@angular/forms';
-import { ExMarksPipe } from './pipes/ex-marks.pipe'
+import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
+import { ExMarksPipe } from './pipes/ex-marks.pipe';
+import { registerLocaleData } from '@angular/common';
+import localeRu from '@angular/common/locales/ru';
+import { FilterPipe } from './pipes/filter.pipe';
 
+registerLocaleData(localeRu, 'ru');
 @NgModule({
-  declarations: [
-    AppComponent,
-    ExMarksPipe,
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent, ExMarksPipe, FilterPipe],
+  imports: [BrowserModule, FormsModule],
+  providers: [{ provide: LOCALE_ID, useValue: 'ru' }],
+  bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}
