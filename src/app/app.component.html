@@ -1,24 +1,5 @@
 <div class="container">
   <h1>Angular Pipes</h1>
-  <button class="btn" (click)="searchFild = 'title'">Title</button>
-  <button class="btn" (click)="searchFild = 'text'">Text</button>
-  <hr />
-  <button class="btn" (click)="addPost()">Добавить новый пост</button>
-
-  <p>
-    {{ "Hello    World" | exMarks }}
-  </p>
-  <p>
-    {{ date | date: "fullDate" }}
-  </p>
-
-  <input type="text" [(ngModel)]="search" />
-</div>
-<div *ngFor="let post of posts | filter: search:searchFild" class="card">
-  <h2>
-    {{ post.title }}
-  </h2>
-  <p>
-    {{ post.text }}
-  </p>
+  <p>подождите.... {{ p | async }}</p>
+  <p>Date: {{date | async | date:"EEEE, d MMMM yг, H:mm:ss"}}</p>
 </div>
