@@ -2,7 +2,8 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## Добавляем контролы в формы
+## Валидируем контролы
 
-1. привязываем значение Email и пароль к форме (email: new FormControl("", )) - "" - нач. значение, форма валидаторов
-2. инициализируем контроли и собираем с них значения в форме input (formControlName="email")
+1. Напишем валидатоды для поля email и pasword вторым параметром в FormControl
+2. ([disabled]=form.invalid) добавляем блокиратор формы invalid
+3. В submit можно написать доп функцию валидности
