@@ -2,9 +2,9 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## Декоратор Injectable
+## Локальные сервисы
 
-Декоратор Injectable регистрирует за нас сервис в корневом модуле
+как ещё можно пользоваться сервисами и как разделять область их видимости
 
-1. указываем providedIn: 'root' в @Injectable
-2. можно удалить импорты в app.module.ts
+1. Создаём сервис local-counter через ng CLI
+2. Регистрируем сервис локально в компоненте
