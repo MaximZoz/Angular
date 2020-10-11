@@ -4,7 +4,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Локальные и Глобальные сервисы
 
-Как разделять область видимости сервиса
+Инжектирование сервиса внутри сервиса
 
-1. CounterComponent зареегистрирован в app.module и по-этому его можно использовать глобально
-2. LocalCounterService не зареегистрирован в app.module и по-этому его можно использовать только локально
+1. создаём новый сервис log-service
+2. реализуем constructor (private LogService: LogService) {} в AppCounterService
+3. в метод конструктора добавляем функцию из LogService this.LogService.log('decrease counter...');
