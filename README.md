@@ -2,12 +2,14 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## Создание объектов методом POST
+## загрузка
 
-1. Оживляем форму: Добавляем переменную (todoTitle = ''), помещаем её в ngModel в html => title
+1. Оживляем кнопку "загрузка": в html добавляем метод fetchTodos() в кнопку загрузки
 
-2. При нажатии (Добавить) вызываем метод addTodo()
+2. В метод fetchTodos копируем логику из ngOnInit
 
-3. Создаём метод addTodo() в компоненте
+3. Добавляем индикатор загрузки: создаём переменную (loading = false), В метод fetchTodos устанавливаем переменную (loading = true), после реализации метода fetchTodos кстанавливаем (this.loading = false)
 
-4. Добавляем в метод addTodo() вализацию и если она проходит, то создаём новый Todo (newTodo), в переменную http в её метод post первым параметром указываем источник куда отправляем пост (https://jsonplaceholder.typicode.com/todos), вторым параметром указываем то, что отправляем (newTodo), затем подписываемся на этот метод, чтобы вызвать его (.subscribe((todo) => {}), добавляем todo в todos с помощью (this.todos.push(todo)) , Очищаем title с помощью (this.todoTitle = '')
+4. отображаем loading в html: с помощью ngIf создаём условие для !loading или отображаем loadingBlock с помощью template
+
+5. добавляем в стрим RxJs с помощью метода pipe искусственную задержку, чтобы съимульровать работу loader ( .pipe(delay(1500)))
