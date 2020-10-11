@@ -2,14 +2,13 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## загрузка
+## удалить пост
 
-1. Оживляем кнопку "загрузка": в html добавляем метод fetchTodos() в кнопку загрузки
+1. Оживляем кнопку "удалить": вызываем метод removeTodo(todo.id) по клику в html
 
-2. В метод fetchTodos копируем логику из ngOnInit
+2. создаём метод removeTodo(id), который удаляет элемент по id с сервера
+   (this.http.delete(https://jsonplaceholder.typicode.com/todos/${id})
 
-3. Добавляем индикатор загрузки: создаём переменную (loading = false), В метод fetchTodos устанавливаем переменную (loading = true), после реализации метода fetchTodos кстанавливаем (this.loading = false)
+3. Избавляемся от поста во фронтенде: (this.todos = this.todos.filter((t) =>t.id !==id)) фильтруем todos по id
 
-4. отображаем loading в html: с помощью ngIf создаём условие для !loading или отображаем loadingBlock с помощью template
-
-5. добавляем в стрим RxJs с помощью метода pipe искусственную задержку, чтобы съимульровать работу loader ( .pipe(delay(1500)))
+4. добавляем запить в html о том, что ничего нет
