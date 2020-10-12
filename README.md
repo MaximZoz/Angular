@@ -2,10 +2,10 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## Добавляем параметр observe к запросам(получаем детальный доступ до любого этапа запроса)
+## Интерсептор (классы, которые позволяют перехватывать http запросы и что-то с ними делать)
 
-1. todos.service => fetchTodos => get вторым параметром создаём параметр observe
+1. создаём файл interceptor.ts, в нём export class AuthInterceptor implements HttpInterceptor
 
-2. в todos.service => fetchTodos => get.pipe(map()) создаём метод map() чтобы модифицировать данные
+2. Регистрируем его в appModule
 
-3. в todos.service => removeTodo =>pipe создаём метод tap в котором создаём функцию ( if (event.type === HttpEventType.Sent) и (if (event.type === HttpEventType.Response)) которая позволяет нам следить за событиями до отправки на сервер и после
+3. INTERCTPTOR_PROVIDER передаём в массив providers, чтобы его зарегистрировать
