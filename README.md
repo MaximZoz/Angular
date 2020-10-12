@@ -2,12 +2,13 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## Оживляем кнопку (завершить) которая завершает определённый todo
+## обрабатываем ошибки когда используем http client
 
-1. в шаблоне создаём метод (completeTodo(todo.id))
+1. в метод fetchTodos делаем так, чтобы сервер отвечал с ошибкой (постоянная загрузка + ошибка 404 в консоли)
 
-2. в todos.service реализуем метод completeTodo(todo.id) в нем this.http.put("ссылка" "compleate: true") "compleate: true" - поля, которые мы хотим модифицировать
+2. в appComponent в методе fetchTodos => subscribe вторым параметром веводим ошибки в консоль (error.message)
 
-3. в appComponent обращаемся к todosService=>completeTodo и подписываемся на стрим (this.todosService.completeTodo(id).subscribe((todo: any) => {})
+3. выводим ошибку error.message в шаблон в appComponent заводим переменную (error = '') , в scss добавляем стиль для error
 
-4. в appComponent=> completeTodo() => subscribe() в todos с помощью метода find находим todo.id и присваеваем ему значение completed=true (this.todos.find(t=> t.id===todo.id).completed=true)
+4. Используем встроенный инструмент для обработки ошибок catchError:
+   обрабатываем в методе (fetchTodos => pipe)
