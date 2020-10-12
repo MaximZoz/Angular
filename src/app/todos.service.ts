@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, delay } from 'rxjs/operators';
 
@@ -14,9 +14,18 @@ export class TodosService {
   constructor(private http: HttpClient) {}
 
   addTodo(todo: Todo): Observable<Todo> {
+    const headers = new HttpHeaders({
+      myCastomHeader: Math.random().toString(),
+    });
     return this.http.post<Todo>(
       'https://jsonplaceholder.typicode.com/todos',
-      todo
+      todo,
+      {
+        headers,
+        //   headers: new HttpHeaders({
+        //   myCastomHeader: Math.random().toString(),
+        // }),
+      }
     );
   }
 
