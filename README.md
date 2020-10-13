@@ -2,8 +2,8 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## показываем в динамическом режиме активную ссылку
+## делаем програмную навигацию (по клику переходим в posts)
 
-1. указываем routerLinkActive="active" в форме
+1. создаём метод (goToPage) , реализовываем конструктор в котором Router
 
-2. указываем ([routerLinkActiveOptions]="{exact: true}") элемента ("/") чтобы он не подсвечивался активным при клине на другой элемент
+2. в методе (goToPage) обращаемся к this.router и вызываемметод (.navigate(['/posts']))
