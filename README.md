@@ -2,8 +2,6 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## работа с query params ( параметры, которые идут после ? )
+## Создаём вложенные роуты у различных страниц
 
-1. Оживляем кнопку back
-
-2. реализовываем задачу показа id только в том случае, если присутствует query параметр о том, что его надо показать: posts.component => showIds = false, (\*ngIf="showIds" routerLink]="['/posts']" и [queryParams] = '{ showIds: true }')
+1. Реализовываем задачу при клике на Show Extra подгружаем дом страницу: регистрируем дочерний элемент (app-routing.module => aboutComponent => children ) Байндим это в about.component добавляем (router-outlet)
