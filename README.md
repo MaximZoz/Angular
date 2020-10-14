@@ -2,12 +2,8 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## определяем по id какой стоит пост и отображаем его данные
+## работа с query params ( параметры, которые идут после ? )
 
-1. считываем с адресной строки какое находится значение
+1. Оживляем кнопку back
 
-2. в postComponent => ngOnInit добавляем this.route.params.subscribe((params: Params) => {} чтобы получить доступ к id по клике на пост
-
-3. в PostComponent создаём переменную post, в ngOnInit присваиваем ей значение id поста, преобразовываем данные в string ( this.post = this.postService.getById(+params.id) )
-
-4. Оживляем кнопку (load 4 post) post.component => button => (click)="loadPost()" , создаём переменную private router: Router которую реализуем в loadPost(){this.router.navigate(['/posts', '44'])} чтобы загружалось id 44
+2. реализовываем задачу показа id только в том случае, если присутствует query параметр о том, что его надо показать: posts.component => showIds = false, (\*ngIf="showIds" routerLink]="['/posts']" и [queryParams] = '{ showIds: true }')
