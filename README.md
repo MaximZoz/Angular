@@ -2,6 +2,10 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## Создаём вложенные роуты у различных страниц
+## обработка ошибок адресной строки + Редирект
 
-1. Реализовываем задачу при клике на Show Extra подгружаем дом страницу: регистрируем дочерний элемент (app-routing.module => aboutComponent => children ) Байндим это в about.component добавляем (router-outlet)
+1. Генерируем новый компонент (ng g c error-page --skipTests) ы которой создаём страницу ошибки и возвращаем на главную страницу
+
+2. в app-routing.module регистрируем страницу по адресу (/error)
+
+3. редиректим несуществующую страницу на страницу error помощью redirectTo \*\* (redirectTo должен объявляться последним объектом в массиве)
