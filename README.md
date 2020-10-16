@@ -6,7 +6,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Lazy loading или ленивая загрузка модулей:
 
-- делаем так, чтобы (about-page.module) прогружался когда на него кликаешь, а не тогда, когда входишь на сайт
+- делаем так, чтобы (about-page.module) прогружался в фоновом режиме после того, как загрузили основную страницу
 
-1. в app-routing.module =>loadChildren передаём AboutPageModule
-2. в app.module удаляем импорты AboutPageModule
+1. в (app-routing.module) создаём (const routes) и кидаём в нее роуты для about-page
+2. в (RouterModule.forRoot) первым параметром указываем (routes), вторым (preloadingStrategy: PreloadAllModules)
