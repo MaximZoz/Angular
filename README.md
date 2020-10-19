@@ -2,18 +2,14 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## введение в unit тесты
+## Тестирование строк и массивов
 
-- Виды тестов:
+- Тестирование строк
 
-1. Unit тесты (функционал классов, сервисов, функций)
+1. playground => greet.ts => function greet (функционал для строк)
+2. playground => greet.spec.ts => toContain (тестируем функцию по входному значению)
 
-2. Интеграционные тесты (прослушка событий, роутинг и тд)
+- Тестирование массивов
 
-3. End-to-end тесты (как фронтенд взаимодействует с бекендом)
-
-- karma.conf.js - базовый конфиг, который запускает всё тесстирование
-
-1. playground => compute.ts => function compute (что тестируем)
-
-2. playground => compute.spec.ts => describe (чем тестируем)
+1. playground => countries.ts => function countries (функционал для массивов)
+2. playground => countries.spec.ts => toContain (тестируем функцию по входному значению)
