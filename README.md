@@ -2,20 +2,12 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
 
-## Тестирование компонентов
+## Тестирование компонентов если компонент аутпутит что- либо неверх
 
-- Создаём простой компонент
+# передаём counter наверх
 
-1. counter => counter.component.ts => CounterComponent
+1. counter.component.ts => counterEmiter => this.counterEmiter.emit(this.counter)
 
-- Тестируем компонент
+# тестируем counterEmiter
 
-1. counter => counter.component.spec.ts => describe
-
-- (xit, xdescribe - пропустить тестирование)
-
-* (beforeEach - создаёт новый уникальный инстатнс компонента т.е. обнуляет)
-* (beforeAll - метод будет вызван перед всеми it)
-* (beforeAll - метод будет вызван перед всеми it)
-* (AfterEach - метод будет вызван после завершения всех it)
-* (AfterAll - метод будет вызван после завершения всех тестов)
+1. counter.component.spec.ts => describe => should increment value by EventEmiter
