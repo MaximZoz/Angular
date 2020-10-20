@@ -1,22 +1,7 @@
-# Тестирование работы сервиса
+# Тестирование работы компонента
 
-- ### Проверяем действительно ли изменяется массив post когда мы добавляем новый элемент
+- ### тестируем метод delete
 
-  posts.component.spec.ts => describe=> it =>
-  const spy = spyOn(service, 'create').and.returnValue(EMPTY);
+1.  #### toHaveBeenCalledWith()- проверяем вызвался ли элемент с переданным id при вызове окна (confirm)
 
-1.  #### toHaveBeenCalled()- проверяем вызвался ли элемент
-
-    expect(spy).toHaveBeenCalled()
-
-2.  #### toBeTruthy() проверка на то, что там что- то есть
-
-    expect(component.posts.includes(post)).toBeTruthy();
-
-3.  #### проверка на то, что если ошибка, то поле messege = err
-
-    const error = 'Error message';
-    spyOn(service, 'create').and.returnValue(throwError(error));
-
-        component.add('Post title');
-        expect(component.message).toBe(error);
+2.  #### если пользователь отменил удаление в окне (confirm) not.toHaveBeenCalled() - не был вызван
