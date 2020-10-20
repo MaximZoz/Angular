@@ -1,37 +1,22 @@
 # Тестирование работы сервиса
 
-- ## Тоздаём сервис posts и декларируем его
+- ### Проверяем действительно ли изменяется массив post когда мы добавляем новый элемент
 
-1. posts => posts.component.ts , posts.service.ts
+  posts.component.spec.ts => describe=> it =>
+  const spy = spyOn(service, 'create').and.returnValue(EMPTY);
 
-2. app.module.ts => declarations => PostsComponent
+1.  #### toHaveBeenCalled()- проверяем вызвался ли элемент
 
-- ## Тестируем сервис posts
+    expect(spy).toHaveBeenCalled()
 
-1. #### готовим unit тест
+2.  #### toBeTruthy() проверка на то, что там что- то есть
 
-   posts.component.spec.ts => describe=> beforeEach , it , let component , let service
+    expect(component.posts.includes(post)).toBeTruthy();
 
-2. #### инициализируем component в spec
+3.  #### проверка на то, что если ошибка, то поле messege = err
 
-beforeEach => service = new PostsService(null) , component = new PostsComponent(service);
+    const error = 'Error message';
+    spyOn(service, 'create').and.returnValue(throwError(error));
 
-3. #### в it мОкаем(следим) метод fetch у service с помощью spyOn и возвращаем EMPTY(RxJs)
-
-posts.component.spec.ts => describe => it => const spy
-
-4. #### тестируем метод spy на то, что он вызывается (toHaveBeenCalled - проверка на вызов)
-
-   posts.component.spec.ts => describe => it =>
-
-component.ngOnInit();
-expect(spy).toHaveBeenCalled();
-
-5. #### проверяем метод post на то, что ей присвоились какие- то данные (of-метод из (RxJs) который возвращает Observable )
-
-   posts.component.spec.ts => describe => it =>
-
-   const post = [1, 2, 3, 4];
-   spyOn(service, 'fetch').and.returnValue(of(post));
-   component.ngOnInit();
-   expect(component.posts.length).toBe(post.length);
+        component.add('Post title');
+        expect(component.message).toBe(error);

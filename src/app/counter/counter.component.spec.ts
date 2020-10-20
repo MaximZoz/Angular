@@ -22,7 +22,7 @@ describe('CounterComponent', () => {
 
   it('should increment value by event emitter', () => {
     let result = null;
-    component.counterEmitter.subscribe((v) => (result = v));
+    component.counterEmitter.subscribe((v: any) => (result = v));
 
     component.increment();
 
