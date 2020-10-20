@@ -1,26 +1,37 @@
-# Zoz
+# Тестирование работы сервиса
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.3.
+- ## Тоздаём сервис posts и декларируем его
 
-# Тестирование работы формы
+1. posts => posts.component.ts , posts.service.ts
 
-## инициализируем form через FormBuilder
+2. app.module.ts => declarations => PostsComponent
 
-1. counter.component.ts => form => constructor => private fb: FormBuilder this.form= fb.group => login, email
+- ## Тестируем сервис posts
 
-2. app.module.ts => imports => FormsModule
+1. #### готовим unit тест
 
-## тестируем form
+   posts.component.spec.ts => describe=> beforeEach , it , let component , let service
 
-1.  передаём new FormBuilder() в CounterComponent
+2. #### инициализируем component в spec
 
-- counter.component.spec.ts => component = new CounterComponent(new FormBuilder())
+beforeEach => service = new PostsService(null) , component = new PostsComponent(service);
 
-2.  тестируем то, что контролы (логин и емаил) были созданы и есть в форме (contains - возвращает bool если control name: str)
+3. #### в it мОкаем(следим) метод fetch у service с помощью spyOn и возвращаем EMPTY(RxJs)
 
-- it('should create form with 2 controls', () => {
-  expect(component.form.contains('login')).toBeTruthy();
+posts.component.spec.ts => describe => it => const spy
 
-3.  тестируем то, что работает валидатор
+4. #### тестируем метод spy на то, что он вызывается (toHaveBeenCalled - проверка на вызов)
 
-- it => const control = component.form.get('login') => control.setValue('') => expect(control.valid).toBeFalsy();
+   posts.component.spec.ts => describe => it =>
+
+component.ngOnInit();
+expect(spy).toHaveBeenCalled();
+
+5. #### проверяем метод post на то, что ей присвоились какие- то данные (of-метод из (RxJs) который возвращает Observable )
+
+   posts.component.spec.ts => describe => it =>
+
+   const post = [1, 2, 3, 4];
+   spyOn(service, 'fetch').and.returnValue(of(post));
+   component.ngOnInit();
+   expect(component.posts.length).toBe(post.length);
