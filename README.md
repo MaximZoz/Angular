@@ -1,12 +1,6 @@
-# работа с роутингом
+# работа с параметрами url
 
-1. #### Создаём class RouterStub
+1. #### тестируем параметр params({id})
 
-routing.component.spec.ts => RouterStub
-
-2. #### меняем назначение классов
-
-   routing.component.spec.ts => beforeEach => provide
-
-3. #### тестируем то, что router вызывается с параметром (['/posts'])
-   routing.component.spec.ts => it => router, spy, component.goBack,
+routing.component.spec.ts => ActivatedRouteStub
+routing.component.spec.ts => it => router, spy, route
