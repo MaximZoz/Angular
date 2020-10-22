@@ -1,10 +1,12 @@
 # работа с роутингом
 
-1. #### Создаём компонент для тестов
+1. #### Создаём class RouterStub
 
-   ng g c routing
+routing.component.spec.ts => RouterStub
 
-2. #### фиксим routing.component.spec.ts
+2. #### меняем назначение классов
 
-3. #### фиксим routing.component.ts
-   routing => routing.component.ts
+   routing.component.spec.ts => beforeEach => provide
+
+3. #### тестируем то, что router вызывается с параметром (['/posts'])
+   routing.component.spec.ts => it => router, spy, component.goBack,
