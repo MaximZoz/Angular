@@ -1,19 +1,10 @@
-# интеграционные тестирования для posts компонента с различными зависимостями
+# работа с роутингом
 
-- ## Создаём тестовый модуль, декларируем в него PostsComponent со всеми зависимостями сервисов, проводим тесты
+1. #### Создаём компонент для тестов
 
-1. posts.component.spec.ts => beforeEach => TestBed , fixture , component
+   ng g c routing
 
-- ## тестируем компонент на то, что вызывается ngOnInit и забирает данные с сервера
+2. #### фиксим routing.component.spec.ts
 
-1. #### провайдим сервис, импортируем HttpClient
-
-   posts.component.spec.ts => beforeEach => TestBed
-
-2. #### получаем инстанс сервиса
-
-   posts.component.spec.ts => beforeEach => service
-
-   3. #### тестируем component.posts на соответствие (toEqual() )
-
-      posts.component.spec.ts => it => spyOn, expect
+3. #### фиксим routing.component.ts
+   routing => routing.component.ts
