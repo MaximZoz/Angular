@@ -1,4 +1,4 @@
 # работа с анимацией
 
-- #### группировка анимации
-  app.component.ts => @Component => animations => transition => group
+- #### Доступ до дочерних элементов (метод query)
+  app.component.ts => @Component => animations => transition => group => query
