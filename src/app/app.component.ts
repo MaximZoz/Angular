@@ -7,6 +7,7 @@ import {
   trigger,
   group,
   query,
+  keyframes,
 } from '@angular/animations';
 
 @Component({
@@ -56,10 +57,34 @@ import {
       ]),
 
       // void => *
-      transition(':enter', [style({ opacity: 0 }), animate('800ms ease-out')]),
+      transition(':enter', [
+        animate(
+          '4s',
+          keyframes([
+            style({
+              background: 'red',
+              offset: 0,
+            }),
+            style({
+              background: 'black',
+              offset: 0.2,
+            }),
+            style({
+              background: 'orange',
+              offset: 0.3,
+            }),
+            style({
+              background: 'blue',
+              offset: 1,
+            }),
+          ])
+        ),
+
+        // style({ opacity: 0 }),
+        // animate('800ms ease-out')
+      ]),
       // * => void
       transition(':leave', [
-        style({ opacity: 1 }),
         group([
           animate(
             '100ms ease-out',
@@ -69,6 +94,7 @@ import {
               fontSize: '20px',
             })
           ),
+          style({ opacity: 1 }),
           animate(
             '1800ms ease-out',
             style({
