@@ -1,5 +1,8 @@
 # работа с анимацией
 
+### сложные анимации
+
 - #### плавно меняем состояние анимации
 
-app.component.ts => @Component => animations => transition
+1. app.component.html => ( button (click)="boxState = 'special')
+2. app.component.ts => @Component => animations => state('special')
