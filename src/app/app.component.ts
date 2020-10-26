@@ -5,6 +5,7 @@ import {
   style,
   transition,
   trigger,
+  group,
 } from '@angular/animations';
 
 @Component({
@@ -45,13 +46,23 @@ import {
       // * => void
       transition(':leave', [
         style({ opacity: 1 }),
-        animate(
-          '800ms ease-out',
-          style({
-            opacity: 0,
-            transform: 'scale(1.2)',
-          })
-        ),
+        group([
+          animate(
+            '100ms ease-out',
+            style({
+              color: 'black',
+              fontWeight: 'bold',
+              fontSize: '20px',
+            })
+          ),
+          animate(
+            '1800ms ease-out',
+            style({
+              opacity: 0,
+              transform: 'scale(1.2)',
+            })
+          ),
+        ]),
       ]),
     ]),
   ],
