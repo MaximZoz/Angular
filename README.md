@@ -1,9 +1,24 @@
 # работа с анимацией
 
-#### импортируем анимацию в модуль
+- #### регистрируем анимацию в компонент
 
-app.module.ts => imports => BrowserAnimationsModule
+  polyfills.ts => @Component => animations
 
-#### полифилы для устаревших браузеров
+- #### описываем параметры анимации
 
-polyfills.ts
+  polyfills.ts => @Component => animations => trigger => state
+
+- #### переменная для описания состояния нужного элемента
+
+  app.component.ts => AppComponent => boxState
+
+- #### добавляем анимацию в шаблон
+
+  app.component.html => ( [@box]="boxState" )
+
+- #### создаём кнопку, при клике применяем анимацию
+
+  app.component.html => ( button (click)="animate() )
+
+- #### создаём анимацию
+  app.component.ts => AppComponent => animate
