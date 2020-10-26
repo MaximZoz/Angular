@@ -1,4 +1,10 @@
-import { state, style, trigger } from '@angular/animations';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { Component } from '@angular/core';
 
 @Component({
@@ -15,6 +21,8 @@ import { Component } from '@angular/core';
           transform: 'scale(1.2)',
         })
       ),
+      transition('start => end', animate(500)),
+      transition('end  => start', animate('800ms ease-in-out')),
     ]),
   ],
 })
