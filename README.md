@@ -1,8 +1,9 @@
 # работа с анимацией
 
-### сложные анимации
+- #### появление и исчезновение при клике на кнопку
 
-- #### плавно меняем состояние анимации
+app.component.ts => AppComponent => state('special') => visible = true
 
-1. app.component.html => ( button (click)="boxState = 'special')
-2. app.component.ts => @Component => animations => state('special')
+app.component.html => button (click)="visible = !visible ,\*ngIf="visible"
+
+app.component.ts =>( transition ':leave')
