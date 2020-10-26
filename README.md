@@ -1,4 +1,8 @@
 # работа с анимацией
 
-- #### Шаги анимации (метод keyframes)
-  app.component.ts => @Component => animations => transition => keyframes
+- #### события анимации (event)
+
+  app.component.html => (@box.start)="(animationStart(\$event))"
+
+  app.component.ts => animationStart
+  app.component.ts => animationDone
