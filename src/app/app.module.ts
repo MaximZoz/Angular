@@ -12,13 +12,10 @@ import { PostPageComponent } from './post-page/post-page.component';
     AppComponent,
     MainLayoutComponent,
     HomePageComponent,
-    PostPageComponent
+    PostPageComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,26 +1,33 @@
 # Создание приложения
 
-### Создаём layout (генерируем компоненты, которые будут относиться к layout)
+### Создаём layout админки (генерируем компоненты, которые будут относиться к layout)
 
-- #### удаляем всё ненужное (spec, базовый шаблон)
+- #### создаём admin.modul
 
-- #### генерируем компонент, который будет относиться к layout (показ блога)
+  admin => admin.modul.ts => ngModule, export class AdminModule
 
-ng g c shared/components/main-layout --skipTests
+- #### создаём admin-layout
 
-- #### применяем main-layout.component к роутам
+  ng g c admin/shared/components/admin-layout --skipTests
 
-  app-routing.module.ts => const routes => component => MainLayoutComponent
+- #### создаём login-page
 
-- #### генерируем компоненты в корне приложения, которые будет относиться к главному виду
+  ng g c admin/login-page --skipTests
 
-ng g c home-page --skipTests
-ng g c post-page --skipTests
+- #### применяем admin.modul к роутам и лейзи лоадим его
 
-- #### применяем home-page и post-page к дочерним роутам main-layout, редиректим на "/"
+  src\app\app-routing.module.ts
 
-  app-routing.module.ts => const routes => children => redirectTo
+  admin => admin.modul.ts => ngModule => imports => RouterModule.forChild
 
-- #### отображаем роутинг в шаблоне
-  app.component.html => router-outlet
-  main-layout.component.html => router-outlet
+admin => admin.modul.ts => RouterModule.forChild => component => AdminLayoutComponent, children
+
+- #### создаём компоненты для админки и прописываем роуты для них
+  ng g c admin/dashboard-page --skipTests
+  ng g c admin/create-page --skipTests
+  ng g c admin/edit-page --skipTests
+
+admin\admin.module.ts => RouterModule.forChild => path
+
+- #### задаём стратегию загрузки (админка загружается в фоне после всех модулей)
+  app-routing.module.ts => NgModule => imports => preloadingStrategy: PreloadAllModules
