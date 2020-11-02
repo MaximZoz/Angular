@@ -1,13 +1,4 @@
-# оформляем главную страницу
+# оформляем страницу поста
 
-### оформляем layout
-
-shared => components => main-layout => main-layout.component.html
-
-### выносим отдельный пост в компонент
-
-ng g c shared/components/post --skipTests
-
-### создаём шаблон поста, добавляем роутинк на btn
-
-shared => components => post => post.component.html
+post-page\post-page.component.html
+post-page\post-page.component.scss
