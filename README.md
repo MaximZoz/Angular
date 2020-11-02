@@ -1,4 +1,4 @@
-# оформляем страницу поста
+# создаём структура admin layout
 
-post-page\post-page.component.html
-post-page\post-page.component.scss
+admin\shared\components\admin-layout\admin-layout.component.html
+admin\shared\components\admin-layout\admin-layout.component.ts
