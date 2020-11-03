@@ -1,18 +1,40 @@
-# создаём форму для днамической валидации
+# создаём сервисы
 
-### создаём шаблон для входа
+### создаём сервис для авторизации в системе
 
-admin\login-page\login-page.component.html
+admin\shared\services\auth.service.ts
 
-### подключаем форму
+- #### рег. AuthService в admin.module.ts
 
-admin\login-page\login-page.component.ts => form
-admin\login-page\login-page.component.ts => ngOnInit => this.form = new FormGroup
+  admin\admin.module.ts => providers => AuthService
 
-app.module.ts => imports => FormsModule, ReactiveFormsModule
+- #### создаём post запрос на авторизацию
+  admin\shared\services\auth.service.ts => AuthService => login => this.http.post(user)
+- #### создаём post запрос на выход
+  admin\shared\services\auth.service.ts => AuthService => logOut
+- #### создаём метод, который говорит авторизован пользователь в системе или нет (!!this.token - false если пустая строка, true если что-то есть)
 
-### создаём файл интерфейсов, реализуем его в login-page.component
+  admin\shared\services\auth.service.ts => AuthService => isAuthentificated => returt !!this.token
 
-shared\interfaces.ts =>
+- #### создаём get token, который будет прилетать с сервера
 
-admin\login-page\login-page.component.ts => const user: User
+  admin\shared\services\auth.service.ts => AuthService => get token
+
+- #### создаём метод SetToken, который будет изменять токен
+  admin\shared\services\auth.service.ts => AuthService => SetToken
+
+### создаём shared.module
+
+admin\shared\shared.module.ts
+
+- #### рег. sharedModule
+
+  src\app\app.module.ts => imports => SharedModule
+
+- #### импорт. sharedModule в адммин
+  admin\admin.module.ts => imports => SharedModule
+
+### выполняем действия при аутентификации формы
+
+admin\login-page\login-page.component.ts => submit(), constructor(auth, router)
+admin\login-page\login-page.component.ts => this.auth.logIn(user).subscribe()
