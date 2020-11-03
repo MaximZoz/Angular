@@ -1,40 +1,13 @@
-# создаём сервисы
+# подключаем базу данных для приложения
 
-### создаём сервис для авторизации в системе
+### в пост запрос вставляем ссылку на FIREBASE
 
-admin\shared\services\auth.service.ts
+admin\shared\services\auth.service.ts => AuthService => login => http.post("FIREBASE")
 
-- #### рег. AuthService в admin.module.ts
+### добавляем apiKey в environment
 
-  admin\admin.module.ts => providers => AuthService
+src\environments\environment.ts => const environment => apiKey
 
-- #### создаём post запрос на авторизацию
-  admin\shared\services\auth.service.ts => AuthService => login => this.http.post(user)
-- #### создаём post запрос на выход
-  admin\shared\services\auth.service.ts => AuthService => logOut
-- #### создаём метод, который говорит авторизован пользователь в системе или нет (!!this.token - false если пустая строка, true если что-то есть)
+### добавляем apiKey в environment
 
-  admin\shared\services\auth.service.ts => AuthService => isAuthentificated => returt !!this.token
-
-- #### создаём get token, который будет прилетать с сервера
-
-  admin\shared\services\auth.service.ts => AuthService => get token
-
-- #### создаём метод SetToken, который будет изменять токен
-  admin\shared\services\auth.service.ts => AuthService => SetToken
-
-### создаём shared.module
-
-admin\shared\shared.module.ts
-
-- #### рег. sharedModule
-
-  src\app\app.module.ts => imports => SharedModule
-
-- #### импорт. sharedModule в адммин
-  admin\admin.module.ts => imports => SharedModule
-
-### выполняем действия при аутентификации формы
-
-admin\login-page\login-page.component.ts => submit(), constructor(auth, router)
-admin\login-page\login-page.component.ts => this.auth.logIn(user).subscribe()
+src\app\shared\interfaces.ts => FbAuthrespons => idToken
