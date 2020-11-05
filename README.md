@@ -1,80 +1,69 @@
-# Хранение токена
+# Обработка ошибок
 
-### добавляем returnSecureToken в интерфейс
+### Ловым ошибки
 
-src\app\shared\interfaces.ts => User => returnSecureToken
+- #### создаём приватный метод для обработки ошибок
 
-### добавляем токен в login (expiresIn: "3600" - "жизненный цикл токена" появляется в Пост запросе)
+  src\app\admin\shared\services\auth.service.ts => AuthService =>
+  private handleError
 
-src\app\admin\shared\services\auth.service.ts => login => user.returnSecureToken = true;
-src\app\admin\shared\services\auth.service.ts => FbAuthResponse => expiresIn
+- #### передаём этот метод в pipe по обработкам ошибок catchError и байндим его
 
-### Сохраняем токен в localStorage
+  src\app\admin\shared\services\auth.service.ts => AuthService => login => pipe
+  catchError(this.handleError.bind(this))
 
-src\app\admin\shared\services\auth.service.ts => setToken=> localStorage.setItem('fb-token-exp') , ('fb-token')
+- #### в приватный метод передаём error типа HttpErrorResponse и получаем message и возвращаём ошибку
 
-### получаем токен из localStorage и пишем проверку на дату
+  src\app\admin\shared\services\auth.service.ts => AuthService => private handleError =>
+  const { message } = error.error.error  
+  return throwError(error);
 
-- #### создаём переменную expDate(время жизни токена)
+- #### обрабатываем ошибки с помощью switch case
+  src\app\admin\shared\services\auth.service.ts => AuthService => private handleError =>
+  switch (message) {
+  case 'EMAIL_NOT_FOUND':
+  break;
 
-src\app\admin\shared\services\auth.service.ts => get token => expDate = new Date(localStorage.getItem('fb-token-exp'))
+### Выводим и обрабатываем ошибки
 
-- #### создаём проверку (если текущая дата > времени жизни токена, то нам надо его очистить)
+- #### создаём публичную переменную error типа Subject в виде стрима
 
-src\app\admin\shared\services\auth.service.ts => get token =>
-if (new Date() > expDate) {
-this.logout();
-return null;
-}
+  src\app\admin\shared\services\auth.service.ts => AuthService =>
+  public error\$: Subject (string) = new Subject(string) ()
 
-- #### получаем токен из localStorage
+- #### эмитим события в switch case (диспачим сообщение)
 
-src\app\admin\shared\services\auth.service.ts => get token => return localStorage.getItem('fb-token')
+  src\app\admin\shared\services\auth.service.ts => AuthService => private handleError =>
+  this.error\$.next("неверный email");
 
-- #### дописываем метод logOut
+- #### меняем значение переменной auth на public
 
-  src\app\admin\shared\services\auth.service.ts => logout =>
-  this.setToken(null);
+  src\app\admin\login-page\login-page.component.ts => LoginPageComponent => constructor =>
+  public auth: AuthService
 
-- #### пишем логику для setToken ( если response, то выполняем логику, если null, то чистьм local storage )
-  src\app\admin\shared\services\auth.service.ts =>
-  setToken
+- #### В шаблоне создаём div для ошибок, с помощью \*ngIf и | async as выводим диспаченную ошибку
 
-### при выходе из админки вызываем метод logout
+  src\app\admin\login-page\login-page.component.html =>
 
-src\app\admin\shared\components\admin-layout\admin-layout.component.ts => AdminLayoutComponent => constructor =>
-private auth: AuthService
+  div
+  class="alert alert-danger"
+  \*ngIf="auth.error\$ | async as error"
+  error
+  div
 
-src\app\admin\shared\components\admin-layout\admin-layout.component.ts => AdminLayoutComponent => logout =>
-this.auth.logout();
+### отменяем блокированную кнопку при сабмите
 
-### проверяем очищается ли токен по истечении заданного промежутка времени
+src\app\admin\login-page\login-page.component.ts => LoginPageComponent => submit =>
+() =>{this.submitted = false}
 
-- #### создаём кнопку, которая вызывает метод test()
+### скрываем меню админа если мы ещё не авторизовались
 
-src\app\admin\dashboard-page\dashboard-page.component.html =>
-button (click)=test()
+- #### делаем переменную auth публичной (чтобы во время продакшн сборки не сыпались ошибки)
 
-- #### создаём метод test() , который показывает в консоли наличие токена
+  src\app\admin\shared\components\admin-layout\admin-layout.component.ts => constructor =>
+  public auth: AuthService
 
-src\app\admin\dashboard-page\dashboard-page.component.ts =>
-test() {
-console.log(this.auth.token);
-}
+- #### в шаблоне с помощью \*ngIf отображаем блок если есть авторизация
 
-### создаём флаг, который блокирует кнопку войти если мы вошли
-
-- #### создаём переменную submitted = false;
-
-  src\app\admin\login-page\login-page.component.ts => LoginPageComponent
-  submitted = false;
-
-- #### меняем флаг переменной submitted true на false когда мы сабмитим кнопку
-
-  src\app\admin\login-page\login-page.component.ts => LoginPageComponent => submit() =>
-  this.submitted = true (перед логикой)
-  this.submitted = false (после логики)
-
-- #### блокируем кнопку если submitted = false
-  src\app\admin\login-page\login-page.component.html => button type="submit" =>
-  disabled = "form.invalid || submitted"
+src\app\admin\shared\components\admin-layout\admin-layout.component.html =>
+(ul\*ngIf="auth.isAuthenticated()")
