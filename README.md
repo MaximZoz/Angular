@@ -1,69 +1,68 @@
-# Обработка ошибок
+# Добавляем гвард для остальных страниц админки
 
-### Ловым ошибки
+### создаём guard сервис
 
-- #### создаём приватный метод для обработки ошибок
+src\app\admin\shared\services\auth.guard.ts =>
+@Injectable
+AuthGuard
 
-  src\app\admin\shared\services\auth.service.ts => AuthService =>
-  private handleError
+- #### регистрируем его в admin.module
 
-- #### передаём этот метод в pipe по обработкам ошибок catchError и байндим его
+  src\app\admin\admin.module.ts => providers =>
+  AuthGuard
 
-  src\app\admin\shared\services\auth.service.ts => AuthService => login => pipe
-  catchError(this.handleError.bind(this))
+- #### имплементируем сервис AuthGuard от CanActivate
 
-- #### в приватный метод передаём error типа HttpErrorResponse и получаем message и возвращаём ошибку
+  src\app\admin\shared\services\auth.guard.ts => AuthGuard =>
+  implements CanActivate
 
-  src\app\admin\shared\services\auth.service.ts => AuthService => private handleError =>
-  const { message } = error.error.error  
-  return throwError(error);
+- #### реализовываем метод CanActivate
 
-- #### обрабатываем ошибки с помощью switch case
-  src\app\admin\shared\services\auth.service.ts => AuthService => private handleError =>
-  switch (message) {
-  case 'EMAIL_NOT_FOUND':
-  break;
+  src\app\admin\shared\services\auth.guard.ts => AuthGuard =>
+  canActivate
 
-### Выводим и обрабатываем ошибки
+- #### реализовываем конструктор в который инжектируем auth (чтобы узнать присутствует ли авторизация) и router
 
-- #### создаём публичную переменную error типа Subject в виде стрима
+  src\app\admin\shared\services\auth.guard.ts => AuthGuard => constructor =>
+  auth  
+  router
 
-  src\app\admin\shared\services\auth.service.ts => AuthService =>
-  public error\$: Subject (string) = new Subject(string) ()
+- #### в методе canActivate спрашиваем, если авторизован, то идём дальше, если нет, то выполняем logout и напрввляем в login и создаём queryParams с ключом true
 
-- #### эмитим события в switch case (диспачим сообщение)
+  src\app\admin\shared\services\auth.guard.ts => AuthGuard =>canActivate =>
+  if (this.auth.isAuthenticated()) {
+  return true;
+  } else {
+  this.auth.logout();
+  this.router.navigate(['/admin', 'login'], {
+  queryParams: {
+  loginAgain: true,
+  },
+  });
+  }
 
-  src\app\admin\shared\services\auth.service.ts => AuthService => private handleError =>
-  this.error\$.next("неверный email");
+- #### добавляем в admin.module гуарды на админские компоненты
 
-- #### меняем значение переменной auth на public
+  src\app\admin\admin.module.ts => imports => RouterModule.forChild => children =>
+  canActivate: (AuthGuard)
+
+### обрабатываем query параметр loginAgain
+
+- #### инжектируем в конструктор приватный метод route
 
   src\app\admin\login-page\login-page.component.ts => LoginPageComponent => constructor =>
-  public auth: AuthService
+  private route: ActivatedRoute
 
-- #### В шаблоне создаём div для ошибок, с помощью \*ngIf и | async as выводим диспаченную ошибку
+- #### получаем query параметр в ngOnInit как обзёрбл и обрабатываем его в переменную message
 
+  this.route.queryParams.subscribe((params: Params) => {
+  if (params('loginAgain')) {
+  this.massage = 'Пожалуйста, введите данные';
+  }
+  });
+
+- #### отображаем message в шаблон
   src\app\admin\login-page\login-page.component.html =>
-
+  div class="alert alert-info" \*ngIf="message"
+  {{ message }}
   div
-  class="alert alert-danger"
-  \*ngIf="auth.error\$ | async as error"
-  error
-  div
-
-### отменяем блокированную кнопку при сабмите
-
-src\app\admin\login-page\login-page.component.ts => LoginPageComponent => submit =>
-() =>{this.submitted = false}
-
-### скрываем меню админа если мы ещё не авторизовались
-
-- #### делаем переменную auth публичной (чтобы во время продакшн сборки не сыпались ошибки)
-
-  src\app\admin\shared\components\admin-layout\admin-layout.component.ts => constructor =>
-  public auth: AuthService
-
-- #### в шаблоне с помощью \*ngIf отображаем блок если есть авторизация
-
-src\app\admin\shared\components\admin-layout\admin-layout.component.html =>
-(ul\*ngIf="auth.isAuthenticated()")
