@@ -1,41 +1,26 @@
-# Реализовываем форму, позволяющую создавать пост
+# подключаем плагин редактора
 
-### создаём форму в шаблоне
+### npm ngx-quill
 
-src\app\admin\create-page\create-page.component.html
+npm i ngx-quill
+npm i quill
 
-### добавляем фунцционал для ts
+### в shared.module импортируем QuillModule
 
-- #### в метод ngOnInit создаём form типа new FormGroup и добавляем контролы
+src\app\shared\shared.module.ts => NgModule => imports, exports =>
+QuillModule
 
-  src\app\admin\create-page\create-page.component.ts => CreatePageComponent => ngOnInit =>
+### добавляем Quill editor в create-page.component
 
-  this.form = new FormGroup({
-  title: new FormControl(null, Validators.required),
-  text: new FormControl(null, Validators.required),
-  author: new FormControl(null, Validators.required),
-  });
+src\app\admin\create-page\create-page.component.html => quill-editor
 
-- #### в методе submit пишем проверку, что если форма не валидная, то не выполняем submit()
+### добавляем байндинг на text в Quill editor
 
-  src\app\admin\create-page\create-page.component.ts => CreatePageComponent => submit =>
-  if (this.form.invalid) {
-  return;
-  }
+src\app\admin\create-page\create-page.component.html => quill-editor =>
+formControlName="text"
 
-### привязываем метод submit к форме и сабмитим её
+### импортируем css
 
-src\app\admin\create-page\create-page.component.html => form =>
-(formGroup) = 'form'
-(ngSubmit) = 'submit()'
-
-### создаём пост при сабмите формы
-
-- #### создаём интерфейс post
-
-  src\app\shared\interfaces.ts =>
-  Post
-
-- #### создаём переменную post
-  src\app\admin\create-page\create-page.component.ts => submit =>
-  const post: Post
+src\styles.scss =>
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.snow.css';
