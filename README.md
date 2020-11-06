@@ -1,26 +1,52 @@
-# подключаем плагин редактора
+# Создание поста
 
-### npm ngx-quill
+### Создаём сервис для постов posts.service
 
-npm i ngx-quill
-npm i quill
+- #### провайдим его (так как мы будем его регистрировать в главном модуле)
 
-### в shared.module импортируем QuillModule
+src\app\shared\posts.service.ts =>
 
-src\app\shared\shared.module.ts => NgModule => imports, exports =>
-QuillModule
+- Injectable({
+  providedIn: "root"
+  })
 
-### добавляем Quill editor в create-page.component
+- PostsService
 
-src\app\admin\create-page\create-page.component.html => quill-editor
+- #### в конструктор инжектируем httpClient
 
-### добавляем байндинг на text в Quill editor
+  src\app\shared\posts.service.ts => PostsService =>
 
-src\app\admin\create-page\create-page.component.html => quill-editor =>
-formControlName="text"
+- #### создаём метод create по типу observable <Post>
 
-### импортируем css
+  src\app\shared\posts.service.ts => PostsService => create
 
-src\styles.scss =>
-@import '~quill/dist/quill.core.css';
-@import '~quill/dist/quill.snow.css';
+- #### создаём в методе create метод Post в который передаём url
+  src\app\shared\posts.service.ts => PostsService => create => return this.http.post<Post>(FbDbUrl , post)
+
+### создаём в interface новую переменную url (FbDbUrl), определяем её в environment
+
+- src\environments\environment.ts => FbDbUrl
+- src\environments\interface.ts => FbDbUrl
+
+### настраиваем правила для firebase (неавторизованные пользователи могут читать данные из базы, но создавать только авторизованные)
+
+rules =>
+
+- ".read": false,
+- ".write": "auth != null"
+
+### пишем логику, что при создании поста отправляем его на firebase и очишщаем форму
+
+src\app\admin\create-page\create-page.component.ts => submit
+
+- this.postsService.create(post).subscribe()
+
+### обрабатываем логику id поста, который приходит с сервера
+
+src\app\shared\posts.service.ts => PostsService => create => pipe => map =>
+
+- return {
+  ...post,
+  id: response.name,
+  date: new Date(post.date),
+  };
