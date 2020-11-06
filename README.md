@@ -1,68 +1,41 @@
-# Добавляем гвард для остальных страниц админки
+# Реализовываем форму, позволяющую создавать пост
 
-### создаём guard сервис
+### создаём форму в шаблоне
 
-src\app\admin\shared\services\auth.guard.ts =>
-@Injectable
-AuthGuard
+src\app\admin\create-page\create-page.component.html
 
-- #### регистрируем его в admin.module
+### добавляем фунцционал для ts
 
-  src\app\admin\admin.module.ts => providers =>
-  AuthGuard
+- #### в метод ngOnInit создаём form типа new FormGroup и добавляем контролы
 
-- #### имплементируем сервис AuthGuard от CanActivate
+  src\app\admin\create-page\create-page.component.ts => CreatePageComponent => ngOnInit =>
 
-  src\app\admin\shared\services\auth.guard.ts => AuthGuard =>
-  implements CanActivate
-
-- #### реализовываем метод CanActivate
-
-  src\app\admin\shared\services\auth.guard.ts => AuthGuard =>
-  canActivate
-
-- #### реализовываем конструктор в который инжектируем auth (чтобы узнать присутствует ли авторизация) и router
-
-  src\app\admin\shared\services\auth.guard.ts => AuthGuard => constructor =>
-  auth  
-  router
-
-- #### в методе canActivate спрашиваем, если авторизован, то идём дальше, если нет, то выполняем logout и напрввляем в login и создаём queryParams с ключом true
-
-  src\app\admin\shared\services\auth.guard.ts => AuthGuard =>canActivate =>
-  if (this.auth.isAuthenticated()) {
-  return true;
-  } else {
-  this.auth.logout();
-  this.router.navigate(['/admin', 'login'], {
-  queryParams: {
-  loginAgain: true,
-  },
-  });
-  }
-
-- #### добавляем в admin.module гуарды на админские компоненты
-
-  src\app\admin\admin.module.ts => imports => RouterModule.forChild => children =>
-  canActivate: (AuthGuard)
-
-### обрабатываем query параметр loginAgain
-
-- #### инжектируем в конструктор приватный метод route
-
-  src\app\admin\login-page\login-page.component.ts => LoginPageComponent => constructor =>
-  private route: ActivatedRoute
-
-- #### получаем query параметр в ngOnInit как обзёрбл и обрабатываем его в переменную message
-
-  this.route.queryParams.subscribe((params: Params) => {
-  if (params('loginAgain')) {
-  this.massage = 'Пожалуйста, введите данные';
-  }
+  this.form = new FormGroup({
+  title: new FormControl(null, Validators.required),
+  text: new FormControl(null, Validators.required),
+  author: new FormControl(null, Validators.required),
   });
 
-- #### отображаем message в шаблон
-  src\app\admin\login-page\login-page.component.html =>
-  div class="alert alert-info" \*ngIf="message"
-  {{ message }}
-  div
+- #### в методе submit пишем проверку, что если форма не валидная, то не выполняем submit()
+
+  src\app\admin\create-page\create-page.component.ts => CreatePageComponent => submit =>
+  if (this.form.invalid) {
+  return;
+  }
+
+### привязываем метод submit к форме и сабмитим её
+
+src\app\admin\create-page\create-page.component.html => form =>
+(formGroup) = 'form'
+(ngSubmit) = 'submit()'
+
+### создаём пост при сабмите формы
+
+- #### создаём интерфейс post
+
+  src\app\shared\interfaces.ts =>
+  Post
+
+- #### создаём переменную post
+  src\app\admin\create-page\create-page.component.ts => submit =>
+  const post: Post
