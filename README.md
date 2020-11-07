@@ -1,52 +1,57 @@
-# Создание поста
+# Создание интерсептора (обрабатываем ошибки, которые будут приходить с сервера в общем месте)
 
-### Создаём сервис для постов posts.service
+### Создаём файл auth.interseptor.ts
 
-- #### провайдим его (так как мы будем его регистрировать в главном модуле)
+src\app\shared\auth.interseptor.ts
 
-src\app\shared\posts.service.ts =>
+#### реализовываем AuthInterseptor
 
-- Injectable({
-  providedIn: "root"
+src\app\shared\auth.interseptor.ts =>
+
+- export class AuthInterseptor implements HttpInterceptor
+
+#### инжектируем в конструктор auth и router
+
+src\app\shared\auth.interseptor.ts => AuthInterseptor => constructor =>
+
+- auth
+- router
+
+#### в методе intercept спрашиваем, если авторизация есть, то добавляем токен для кажного запроса (пееропрделяем req чтобы добавить токен если пользователь зарегистрирован и токен рписутствует)
+
+src\app\shared\auth.interseptor.ts => AuthInterseptor => intercept =>
+
+- if (this.auth.isAuthenticated()) {req = req.clone({setParams:{auth: this.auth.token}})}return next.handle(req)}
+
+#### обрабатываем ошибки (в методе pipe ловим ошибки в catchError и обрабатываем из в колл беке )
+
+src\app\shared\auth.interseptor.ts => AuthInterseptor => intercept => pipe => catchError =>
+
+- (error: HttpErrorResponse) => {console.log('[Interceptor Error]', error);
+  if(error.status ===401){
+  this.auth.logout()
+  this.router.navigate(['/admin', 'login'], {queryParams: {authFailed: true}})}
+  return throwError(error);
   })
 
-- PostsService
+#### обрабатываем queryParams в LoginPageComponent
 
-- #### в конструктор инжектируем httpClient
+src\app\admin\login-page\login-page.component.ts => ngOnInit =>
 
-  src\app\shared\posts.service.ts => PostsService =>
+- else {if (params('authFailed')) {this.message = 'Сессия истекла, введите данные заного'}
 
-- #### создаём метод create по типу observable <Post>
+#### регистрируем Interceptor в app.module
 
-  src\app\shared\posts.service.ts => PostsService => create
+src\app\app.module.ts =>
 
-- #### создаём в методе create метод Post в который передаём url
-  src\app\shared\posts.service.ts => PostsService => create => return this.http.post<Post>(FbDbUrl , post)
+- INTERCEPTOR_PROVIDER
 
-### создаём в interface новую переменную url (FbDbUrl), определяем её в environment
+NgModule => providers
 
-- src\environments\environment.ts => FbDbUrl
-- src\environments\interface.ts => FbDbUrl
+- INTERCEPTOR_PROVIDER
 
-### настраиваем правила для firebase (неавторизованные пользователи могут читать данные из базы, но создавать только авторизованные)
+#### регистрируем AuthService в app.module
 
-rules =>
+src\app\admin\shared\services\auth.service.ts => Injectable =>
 
-- ".read": false,
-- ".write": "auth != null"
-
-### пишем логику, что при создании поста отправляем его на firebase и очишщаем форму
-
-src\app\admin\create-page\create-page.component.ts => submit
-
-- this.postsService.create(post).subscribe()
-
-### обрабатываем логику id поста, который приходит с сервера
-
-src\app\shared\posts.service.ts => PostsService => create => pipe => map =>
-
-- return {
-  ...post,
-  id: response.name,
-  date: new Date(post.date),
-  };
+- providedIn: 'root'
