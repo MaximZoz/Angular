@@ -1,57 +1,55 @@
-# Создание интерсептора (обрабатываем ошибки, которые будут приходить с сервера в общем месте)
+# Выводим список постов
 
-### Создаём файл auth.interseptor.ts
+### прописываем структуру шаблона
 
-src\app\shared\auth.interseptor.ts
+src\app\admin\dashboard-page\dashboard-page.component.html
 
-#### реализовываем AuthInterseptor
+### создаём метод getAll, который будет получать все посты, которые есть в базе
 
-src\app\shared\auth.interseptor.ts =>
+src\app\shared\posts.service.ts => PostsService =>
 
-- export class AuthInterseptor implements HttpInterceptor
+- getAll
+  return this.http.get(\${environment.FbDbUrl}/posts.json)
 
-#### инжектируем в конструктор auth и router
+### распарсим данные, которые приходят с сервера
 
-src\app\shared\auth.interseptor.ts => AuthInterseptor => constructor =>
+src\app\shared\posts.service.ts => PostsService => getAll => pipe => map =>
 
-- auth
-- router
+- return Object.keys(response).map((key) => ({...response(key)id: key,date: new Date(response(key).date)}))
 
-#### в методе intercept спрашиваем, если авторизация есть, то добавляем токен для кажного запроса (пееропрделяем req чтобы добавить токен если пользователь зарегистрирован и токен рписутствует)
+### получаем посты с сервера и закидываем их в переменную
 
-src\app\shared\auth.interseptor.ts => AuthInterseptor => intercept =>
+src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent => constructor =>
 
-- if (this.auth.isAuthenticated()) {req = req.clone({setParams:{auth: this.auth.token}})}return next.handle(req)}
+- private postsService
 
-#### обрабатываем ошибки (в методе pipe ловим ошибки в catchError и обрабатываем из в колл беке )
+src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent =>
 
-src\app\shared\auth.interseptor.ts => AuthInterseptor => intercept => pipe => catchError =>
+- posts: Post[]
 
-- (error: HttpErrorResponse) => {console.log('[Interceptor Error]', error);
-  if(error.status ===401){
-  this.auth.logout()
-  this.router.navigate(['/admin', 'login'], {queryParams: {authFailed: true}})}
-  return throwError(error);
-  })
+src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent => ngOnInit =>
 
-#### обрабатываем queryParams в LoginPageComponent
+- this.postsService.getAll().subscribe((posts) => {this.posts = posts})
 
-src\app\admin\login-page\login-page.component.ts => ngOnInit =>
+### создаём метод pSub: Subscription чтобы не было утечек памяти
 
-- else {if (params('authFailed')) {this.message = 'Сессия истекла, введите данные заного'}
+src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent =>
 
-#### регистрируем Interceptor в app.module
+- pSub: Subscription;
 
-src\app\app.module.ts =>
+src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent =>
 
-- INTERCEPTOR_PROVIDER
+- ngOnDestroy =>
+  if (this.pSub) {this.pSub.unsubscribe()}
 
-NgModule => providers
+### создаём loading
 
-- INTERCEPTOR_PROVIDER
+src\app\admin\dashboard-page\dashboard-page.component.html =>
 
-#### регистрируем AuthService в app.module
+- (div \*ngIf="posts.length; else loading")
 
-src\app\admin\shared\services\auth.service.ts => Injectable =>
+### создаём кнопку для поиска постов
 
-- providedIn: 'root'
+src\app\admin\dashboard-page\dashboard-page.component.html
+
+- (input type="text" placeholder="Найти пост...")
