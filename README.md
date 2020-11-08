@@ -1,55 +1,41 @@
-# Выводим список постов
+# Пайп для фильтрации списка
 
-### прописываем структуру шаблона
+### создаём ngModel
 
-src\app\admin\dashboard-page\dashboard-page.component.html
+src\app\admin\dashboard-page\dashboard-page.component.html => input =>
 
-### создаём метод getAll, который будет получать все посты, которые есть в базе
-
-src\app\shared\posts.service.ts => PostsService =>
-
-- getAll
-  return this.http.get(\${environment.FbDbUrl}/posts.json)
-
-### распарсим данные, которые приходят с сервера
-
-src\app\shared\posts.service.ts => PostsService => getAll => pipe => map =>
-
-- return Object.keys(response).map((key) => ({...response(key)id: key,date: new Date(response(key).date)}))
-
-### получаем посты с сервера и закидываем их в переменную
-
-src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent => constructor =>
-
-- private postsService
+- searchStr
 
 src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent =>
 
-- posts: Post[]
+- searchStr: string = ''
 
-src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent => ngOnInit =>
+### создаём pipe search
 
-- this.postsService.getAll().subscribe((posts) => {this.posts = posts})
+src\app\admin\shared\search.pipe.ts
 
-### создаём метод pSub: Subscription чтобы не было утечек памяти
+- SearchPipe implements PipeTransform
 
-src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent =>
+#### реализовываем метод transform (если в строке search ничего нет, то возвращаем массив постов)
 
-- pSub: Subscription;
+src\app\admin\shared\search.pipe.ts => SearchPipe => transform =>
 
-src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent =>
+- if (!search.trim()) {return posts}
 
-- ngOnDestroy =>
-  if (this.pSub) {this.pSub.unsubscribe()}
+#### (а иначе фильтруем массив posts и приведим его к нижнему регистру)
 
-### создаём loading
+src\app\admin\shared\search.pipe.ts => SearchPipe => transform =>
 
-src\app\admin\dashboard-page\dashboard-page.component.html =>
+- return posts.filter((post) => {return post.title.toLowerCase().includes(search.toLowerCase())})
 
-- (div \*ngIf="posts.length; else loading")
+### регистрируем pipe в admin.module
 
-### создаём кнопку для поиска постов
+src\app\admin\admin.module.ts => declarations =>
 
-src\app\admin\dashboard-page\dashboard-page.component.html
+- SearchPipe
 
-- (input type="text" placeholder="Найти пост...")
+### в шаблоне применяем к массиву posts pipe SearchPipe
+
+src\app\admin\dashboard-page\dashboard-page.component.html => tr =>
+
+- \*ngFor="let post of posts | searchPospts: searchStr
