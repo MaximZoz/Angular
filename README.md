@@ -1,41 +1,35 @@
-# Пайп для фильтрации списка
+# Удаление поста
 
-### создаём ngModel
+### реализовываем метод remove, который работает с бекендом
 
-src\app\admin\dashboard-page\dashboard-page.component.html => input =>
+src\app\shared\posts.service.ts =>PostsService =>
 
-- searchStr
+- remove(id: string): Observable(void) {return this.http.delete(void)('${environment.fbDbUrl}/posts/${id}.json')}
+
+### реализовываем метод remove, который работает с фронтендом
+
+src\app\admin\dashboard-page\dashboard-page.component.ts =>
+
+- remove(id: string)
+
+#### в методе remove обращаемся к postsService, вызываем метод remove и подписываемся на стрим subscribe и в колбек функции удаляем post по id
+
+src\app\admin\dashboard-page\dashboard-page.component.ts => remove(id: string) =>
+
+- this.postsService.remove(id).subscribe(()=>{this.posts.filter((post) => post.id !== id)})
+
+#### создаём переменную по типу Subscription и присваиваем ей значение метода remove
 
 src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent =>
 
-- searchStr: string = ''
+- dSub: Subscription;
 
-### создаём pipe search
+src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent => remove
 
-src\app\admin\shared\search.pipe.ts
+- this.dSub = this.postsService.remove(id).subscribe(()=>{this.posts.filter((post) => post.id !== id)})
 
-- SearchPipe implements PipeTransform
+#### реализовываем переменную dSub в методе ngOnDestroy
 
-#### реализовываем метод transform (если в строке search ничего нет, то возвращаем массив постов)
+src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent => ngOnDestroy =>
 
-src\app\admin\shared\search.pipe.ts => SearchPipe => transform =>
-
-- if (!search.trim()) {return posts}
-
-#### (а иначе фильтруем массив posts и приведим его к нижнему регистру)
-
-src\app\admin\shared\search.pipe.ts => SearchPipe => transform =>
-
-- return posts.filter((post) => {return post.title.toLowerCase().includes(search.toLowerCase())})
-
-### регистрируем pipe в admin.module
-
-src\app\admin\admin.module.ts => declarations =>
-
-- SearchPipe
-
-### в шаблоне применяем к массиву posts pipe SearchPipe
-
-src\app\admin\dashboard-page\dashboard-page.component.html => tr =>
-
-- \*ngFor="let post of posts | searchPospts: searchStr
+- if (this.dSub) {this.dSub.unsubscribe()}
