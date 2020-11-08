@@ -1,35 +1,25 @@
-# Удаление поста
+# Страница редоктирования поста
 
-### реализовываем метод remove, который работает с бекендом
+### Создаём метод, который получает id поста из DataBase
 
-src\app\shared\posts.service.ts =>PostsService =>
+src\app\shared\posts.service.ts => PostsService
 
-- remove(id: string): Observable(void) {return this.http.delete(void)('${environment.fbDbUrl}/posts/${id}.json')}
+- getById(id: string) {this.http.get('${environment.fbDbUrl}/posts/${id}.json')}
 
-### реализовываем метод remove, который работает с фронтендом
+#### распарсим json ответ с bataBase c помощью Observable<Post>
 
-src\app\admin\dashboard-page\dashboard-page.component.ts =>
+src\app\shared\posts.service.ts => PostsService => getById =>
 
-- remove(id: string)
+- .pipe(map((post: Post) => {return {...post, id, date: new Date(post.date)}}));
 
-#### в методе remove обращаемся к postsService, вызываем метод remove и подписываемся на стрим subscribe и в колбек функции удаляем post по id
+#### получаем id поста с которым работаем и перпедаём в новый стрим c формой по типу FormGroup
 
-src\app\admin\dashboard-page\dashboard-page.component.ts => remove(id: string) =>
+src\app\admin\edit-page\edit-page.component.ts => EditPageComponent => ngOnInit => this.route.params =>
 
-- this.postsService.remove(id).subscribe(()=>{this.posts.filter((post) => post.id !== id)})
+- .pipe(switchMap((params: Params) => {return this.postsService.getById(params('id'))}))
 
-#### создаём переменную по типу Subscription и присваиваем ей значение метода remove
+- .subscribe((post: Post) => {this.form = new FormGroup({title: new FormControl(post.title, Validators.required), text: new FormControl(post.text, Validators.required)})})
 
-src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent =>
+### Инициализируем форму в шаблоне
 
-- dSub: Subscription;
-
-src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent => remove
-
-- this.dSub = this.postsService.remove(id).subscribe(()=>{this.posts.filter((post) => post.id !== id)})
-
-#### реализовываем переменную dSub в методе ngOnDestroy
-
-src\app\admin\dashboard-page\dashboard-page.component.ts => DashboardPageComponent => ngOnDestroy =>
-
-- if (this.dSub) {this.dSub.unsubscribe()}
+src\app\admin\edit-page\edit-page.component.html
