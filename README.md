@@ -1,25 +1,32 @@
-# Страница редоктирования поста
+# Редактирование поста
 
-### Создаём метод, который получает id поста из DataBase
+### Реализуем метод update, который позволяет обновлять пост
 
 src\app\shared\posts.service.ts => PostsService
 
-- getById(id: string) {this.http.get('${environment.fbDbUrl}/posts/${id}.json')}
+- update
 
-#### распарсим json ответ с bataBase c помощью Observable<Post>
+#### в методе update(post) по типу Observable делаем REST запрос к http .patch
 
-src\app\shared\posts.service.ts => PostsService => getById =>
+src\app\shared\posts.service.ts => PostsService
 
-- .pipe(map((post: Post) => {return {...post, id, date: new Date(post.date)}}));
+- update(post: Post): Observable(Post){ return this.http.patch(Post)('${environment.fbDbUrl}/posts/${post.id}.json',post}
 
-#### получаем id поста с которым работаем и перпедаём в новый стрим c формой по типу FormGroup
+#### в метод submit передаём метод update в который передаём данные массива из form и сабмитим форму по флагу true
 
-src\app\admin\edit-page\edit-page.component.ts => EditPageComponent => ngOnInit => this.route.params =>
+src\app\admin\edit-page\edit-page.component.ts => EditPageComponent => submit =>
 
-- .pipe(switchMap((params: Params) => {return this.postsService.getById(params('id'))}))
+- this.submitted = true;
+- this.postsService.update({...this.post,text: this.form.value.text,title: this.form.value.title}).subscribe(() => { this.submitted = false });
 
-- .subscribe((post: Post) => {this.form = new FormGroup({title: new FormControl(post.title, Validators.required), text: new FormControl(post.text, Validators.required)})})
+#### блокируем кнопку submit в шаблоне если она не валидная или засабмиченная
 
-### Инициализируем форму в шаблоне
+src\app\admin\edit-page\edit-page.component.html => button =>
 
-src\app\admin\edit-page\edit-page.component.html
+- (disabled)="form.invalid" || submited
+
+#### реализовываем OnDestroy с методом unsubscribe => создаём переменную uSub: Subscription, закидываем в неё this.postsService.update
+
+src\app\admin\edit-page\edit-page.component.ts => EditPageComponent => ngOnDestroy
+
+- if (this.uSub) {this.uSub.unsubscribe()}

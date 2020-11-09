@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Post } from './../../shared/interfaces';
 
 @Pipe({
-  name: 'searchPospts',
+  name: 'searchPosts',
 })
 export class SearchPipe implements PipeTransform {
   transform(posts: Post[], search: string = ''): Post[] {
