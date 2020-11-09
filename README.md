@@ -1,32 +1,64 @@
-# Редактирование поста
+# Создание плагина сообщений
 
-### Реализуем метод update, который позволяет обновлять пост
+### создаём плагин(сервис) работы с alert (вывод сообщения в результате каких- либо действий )
 
-src\app\shared\posts.service.ts => PostsService
+src\app\admin\shared\services\alert.service.ts
 
-- update
+#### регистрируем сервис AlertService
 
-#### в методе update(post) по типу Observable делаем REST запрос к http .patch
+src\app\admin\admin.module.ts => providers =>
 
-src\app\shared\posts.service.ts => PostsService
+- AlertService
 
-- update(post: Post): Observable(Post){ return this.http.patch(Post)('${environment.fbDbUrl}/posts/${post.id}.json',post}
+#### создаём стрим, который будет работать с алертами
 
-#### в метод submit передаём метод update в который передаём данные массива из form и сабмитим форму по флагу true
+src\app\admin\shared\services\alert.service.ts => AlertService =>
 
-src\app\admin\edit-page\edit-page.component.ts => EditPageComponent => submit =>
+- public alert\$ = new Subject(Alert)();
 
-- this.submitted = true;
-- this.postsService.update({...this.post,text: this.form.value.text,title: this.form.value.title}).subscribe(() => { this.submitted = false });
+#### создаём медод, вызывая который он будет диспачить для алерта новый объект и показываеть его
 
-#### блокируем кнопку submit в шаблоне если она не валидная или засабмиченная
+src\app\admin\shared\services\alert.service.ts => AlertService =>
 
-src\app\admin\edit-page\edit-page.component.html => button =>
+- success(text: string) {this.alert\$.next({type: 'success', text})}
 
-- (disabled)="form.invalid" || submited
+#### Создаём компонент alert
 
-#### реализовываем OnDestroy с методом unsubscribe => создаём переменную uSub: Subscription, закидываем в неё this.postsService.update
+ng g c admin/shared/components/alert --skipTests
 
-src\app\admin\edit-page\edit-page.component.ts => EditPageComponent => ngOnDestroy
+#### в alert component объявляем delay, text, type = 'success'
 
-- if (this.uSub) {this.uSub.unsubscribe()}
+src\app\admin\shared\components\alert\alert.component.ts => AlertComponent =>
+
+- delay, text, type
+
+#### В AlertComponent объявляем alertService
+
+src\app\admin\shared\components\alert\alert.component.ts => AlertComponent => constructor =>
+
+- private alertService: AlertService
+
+#### подписываемся на стрим alert\$ и закидываем данные alert.text в переменную text, реализовываем таймер
+
+src\app\admin\shared\components\alert\alert.component.ts => AlertComponent => ngOnInit =>
+
+- this.alertService.alert\$.subscribe((alert) => {this.text = alert.text; this.type = alert.type})
+
+- const timeOut = setTimeout(() => {clearTimeout(timeOut); this.text = '';}, this.delay);
+
+#### очищаем Subscription
+
+src\app\admin\shared\components\alert\alert.component.ts => AlertComponent =>
+
+- aSub: Subscription;
+- ngOnDestroy
+
+### Создаём шалбон и указываем место, где будет alert\$
+
+src\app\admin\shared\components\admin-layout\admin-layout.component.html
+
+### добавляем alert после выполнения нужного метода
+
+src\app\admin\create-page\create-page.component.ts => CreatePageComponent =>
+
+- postsService.create(post).subscribe(() => {this.form.reset(); this.alert.success('Пост был создан')});
