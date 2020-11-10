@@ -1,10 +1,32 @@
-# Регистрация локализации
+# Вывод постов
 
-src\app\app.module.ts =>
+### в HomePageComponent получаем данные из postsService и закидываем их в Observable
 
-- registerLocaleData(ruLocale, 'ru');
-- import ruLocale from '@angular/common/locales/ru';
+src\app\home-page\home-page.component.ts => HomePageComponent => constructor =>
 
-src\app\admin\dashboard-page\dashboard-page.component.html =>
+- private postsService: PostsService
 
-- | date: "medium":null:"ru"
+src\app\home-page\home-page.component.ts => HomePageComponent =>
+
+- posts\$: Observable( Post[] )
+
+src\app\home-page\home-page.component.ts => HomePageComponent => ngOnInit =>
+
+- this.posts\$ = this.postsService.getAll()
+
+### разрешем обмениваться данными между родительским контекстом и дочерними компонентами
+
+src\app\shared\components\post\post.component.ts => PostComponent =>
+
+- @Input() post: Post;
+
+### выводим данные поста в шаблон
+
+src\app\shared\components\post\post.component.html =>
+
+- (h2){{ post.title }}(/h2)
+
+### выводим посты в шаблоне
+
+- (div class="posts" *ngIf="posts\$ | async as posts; else loading")
+  *ngFor="let post of posts" (post)="post")
