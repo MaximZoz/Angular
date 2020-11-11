@@ -1,32 +1,20 @@
-# Вывод постов
+# Отображаем пост
 
-### в HomePageComponent получаем данные из postsService и закидываем их в Observable
+### пишем логику для загрузки поста по его id
 
-src\app\home-page\home-page.component.ts => HomePageComponent => constructor =>
+src\app\post-page\post-page.component.ts => PostPageComponent =>
 
+- post\$: Observable(Post)
+
+src\app\post-page\post-page.component.ts => PostPageComponent => constructor =>
+
+- private route: ActivatedRoute,
 - private postsService: PostsService
 
-src\app\home-page\home-page.component.ts => HomePageComponent =>
+  src\app\post-page\post-page.component.ts => PostPageComponent => ngOnInit =>
 
-- posts\$: Observable( Post[] )
+  - this.route.params.pipe(switchMap((params: Params) => {return this.postsService.getById(params('id')]}))
 
-src\app\home-page\home-page.component.ts => HomePageComponent => ngOnInit =>
+### изменяем шаблон
 
-- this.posts\$ = this.postsService.getAll()
-
-### разрешем обмениваться данными между родительским контекстом и дочерними компонентами
-
-src\app\shared\components\post\post.component.ts => PostComponent =>
-
-- @Input() post: Post;
-
-### выводим данные поста в шаблон
-
-src\app\shared\components\post\post.component.html =>
-
-- (h2){{ post.title }}(/h2)
-
-### выводим посты в шаблоне
-
-- (div class="posts" *ngIf="posts\$ | async as posts; else loading")
-  *ngFor="let post of posts" (post)="post")
+src\app\post-page\post-page.component.html
