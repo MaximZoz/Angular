@@ -1,20 +1,29 @@
-# Отображаем пост
+# Добавляем возможность PWA для приложения
 
-### пишем логику для загрузки поста по его id
+### конфигурируем pwa приложение
 
-src\app\post-page\post-page.component.ts => PostPageComponent =>
+- ng add @angular/pwa
 
-- post\$: Observable(Post)
+#### добавляем шрифты из scss, чтобы закешировать их в ServiceWorkerModule
 
-src\app\post-page\post-page.component.ts => PostPageComponent => constructor =>
+ngsw-config.json => assetGroups =>
 
-- private route: ActivatedRoute,
-- private postsService: PostsService
+- urls": ("https://fonts.googleapis.com/css?family=Roboto")
 
-  src\app\post-page\post-page.component.ts => PostPageComponent => ngOnInit =>
+#### добавляем dataGroups
 
-  - this.route.params.pipe(switchMap((params: Params) => {return this.postsService.getById(params('id')]}))
+ngsw-config.json => assetGroups =>
 
-### изменяем шаблон
+- "dataGroups": [{"name": "fireBasePosts", "urls": ("https://angular-blog-5f0de.firebaseio.com/**"), "cacheConfig": {"maxSize": 5, "maxAge": "3600"}}]
 
-src\app\post-page\post-page.component.html
+### делаем prod. сборку
+
+- ng build --prod
+
+### устанавливаем http server для пользовательского теста pwa
+
+- npm i -g http-server
+
+### переходим в dist/Angular и запускаем локальный сервер
+
+- http-server -p 4200
